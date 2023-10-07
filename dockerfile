@@ -1,6 +1,6 @@
-FROM python
+FROM python:latest
 
-RUN pip install -upgrade pyTelegramBotAPI openai
+RUN pip install pyTelegramBotAPI openai
 
 WORKDIR /hackaton_pycones2023
 

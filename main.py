@@ -8,6 +8,7 @@ load_dotenv()
 
 CHATGPT_KEY = os.environ.get("CHATGPT_KEY")
 TELEGRAM_KEY = os.environ.get("TELEGRAM_KEY")
+MODEL_TYPE = "gpt-3.5-turbo"
 
 with open("start.txt", "r", encoding="utf-8") as f:
     start_message = f.read()
@@ -41,9 +42,10 @@ def get_answer(message):
     messages_to_openai = [{'role': 'system', 'content': prompt},
                           {"role": "user", "content": all_users_tasks}]
     
-    chat = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=messages_to_openai)
+    chat = openai.ChatCompletion.create(model=MODEL_TYPE, messages=messages_to_openai)
+
     full_report = chat.choices[0].message.content
-    user_answer = "Gracias " + str(message.from_user.id) + " he tomado nota de tu actividad."
+    user_answer = "Gracias " + str(message.from_user.first_name) + ", he tomado nota de tu actividad."
     return(user_answer, full_report)
 
 
@@ -54,7 +56,7 @@ def echo_all(message):
     '''
     global full_report
     if (message.text == "/start"):
-        answer = start_message
+        answer = start_message.format(name=message.from_user.first_name)
     elif (message.text == "/report"):
         answer = full_report
     else:
