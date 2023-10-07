@@ -9,17 +9,11 @@ load_dotenv()
 CHATGPT_KEY = os.environ.get("CHATGPT_KEY")
 TELEGRAM_KEY = os.environ.get("TELEGRAM_KEY")
 
-#start_message = "Hola, esto es un bot de prueba."
-#prompt="Eres un conciliador de tareas entre varias personas."
-
 with open("start.txt", "r", encoding="utf-8") as f:
     start_message = f.read()
 
 with open("prompt.txt", "r", encoding="utf-8") as f:
     prompt = f.read()
-
-
-
 
 user_tasks = {}
 
@@ -27,7 +21,9 @@ openai.api_key = CHATGPT_KEY
 
 bot = telebot.TeleBot(TELEGRAM_KEY)
 
-def get_answer(message, summary=False):
+full_report = "Vacío"
+
+def get_answer(message):
     '''
     Takes a Telebot message oject, passes its text to chatGPT
     and returns the answer.
@@ -46,8 +42,9 @@ def get_answer(message, summary=False):
                           {"role": "user", "content": all_users_tasks}]
     
     chat = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=messages_to_openai)
-    reply = chat.choices[0].message.content
-    return(reply)
+    full_report = chat.choices[0].message.content
+    user_answer = "Gracias " + str(message.from_user.id) + " he tomado nota de tu actividad."
+    return(user_answer, full_report)
 
 
 @bot.message_handler(func=lambda msg: True)
@@ -55,10 +52,13 @@ def echo_all(message):
     '''
     Takes all incoming messages and returns answers.
     '''
+    global full_report
     if (message.text == "/start"):
         answer = start_message
+    elif (message.text == "/report"):
+        answer = full_report
     else:
-        answer = get_answer(message)
+        answer, full_report = get_answer(message)
 
     bot.reply_to(message, answer, parse_mode='Markdown')
 
