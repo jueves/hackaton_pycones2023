@@ -1,6 +1,6 @@
 FROM python
 
-RUN pip install -U os openai telebot dotenv 
+RUN pip install pyTelegramBotAPI openai
 
 RUN git clone https://github.com/jueves/hackaton_pycones2023.git
 

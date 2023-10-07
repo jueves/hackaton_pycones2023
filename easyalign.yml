@@ -1,0 +1,8 @@
+version: '3.1'
+services:
+  app:
+    image: easyalignment:latest
+       
+    environment:
+      - TELEGRAM_KEY=${TELEGRAM_KEY}
+      - CHATGPT_KEY=${CHATGPT_KEY}
