@@ -26,8 +26,9 @@ full_report = "Vacío"
 
 def get_answer(message):
     '''
-    Takes a Telebot message oject, passes its text to chatGPT
-    and returns the answer.
+    Takes a Telebot message oject, adds it to the users tasks dictionary,
+    and passes the tasks and header prompt to chatGPT to get a report.
+    Returns a duple, a user answer and the full report.
     '''
     if (message.from_user.id not in user_tasks):
         user_tasks[message.from_user.id] = message.text
